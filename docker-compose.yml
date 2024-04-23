@@ -1,0 +1,25 @@
+networks:
+  officenet:
+    external: true
+services:
+  app:
+    image: 'rohmanahmad/php8.3-apache-full:latest'
+    container_name: laravel_dev
+    stdin_open: true
+    tty: true
+    networks:
+      - officenet
+    ports:
+      - 3001:80
+      - 3010:3010
+      - 3011:3011
+    volumes:
+      - ./src:/var/www/html
+      - ./apache.conf:/etc/apache2/sites-available/000-default.conf
+      - ./supervisor-laravel_10.conf:/etc/supervisor/conf.d/laravel_10.conf
+      - ./supervisor-laravel_11.conf:/etc/supervisor/conf.d/laravel_11.conf
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - USE_ZEND_ALLOC=0
+    working_dir: /var/www/html
